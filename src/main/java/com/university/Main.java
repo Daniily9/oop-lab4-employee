@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Console driver for managing Employee objects.
- * Demonstrates enum, copy constructor, static members and aggregation.
+ * Console driver for managing different types of employees.
+ * Demonstrates inheritance, polymorphism, enum and ArrayList.
  */
 public class Main {
 
@@ -21,8 +21,8 @@ public class Main {
     public static void main(String[] args) {
         boolean running = true;
 
-        System.out.println("Практична робота №6");
-        System.out.println("Класи, статичні члени, агрегація, enum");
+        System.out.println("Практична робота №7");
+        System.out.println("Наслідування, поліморфізм, колекції ArrayList");
 
         while (running) {
             printMenu();
@@ -30,14 +30,16 @@ public class Main {
 
             switch (choice) {
                 case "1" -> createEmployee();
-                case "2" -> printAllEmployees();
-                case "3" -> demonstrateFeatures();
-                case "4" -> {
+                case "2" -> createContractEmployee();
+                case "3" -> createFullTimeEmployee();
+                case "4" -> printAllEmployees();
+                case "5" -> demonstratePolymorphism();
+                case "6" -> {
                     System.out.println("Завершення роботи.");
                     running = false;
                 }
                 default -> System.out.println(
-                        "Невірний вибір. Введіть 1, 2, 3 або 4."
+                        "Невірний вибір. Введіть число від 1 до 6."
                 );
             }
         }
@@ -50,53 +52,97 @@ public class Main {
      */
     private static void printMenu() {
         System.out.println("\n--- Меню ---");
-        System.out.println("1. Створити новий об'єкт");
-        System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Продемонструвати можливості №6");
-        System.out.println("4. Завершити роботу");
+        System.out.println("1. Створити Employee");
+        System.out.println("2. Створити ContractEmployee");
+        System.out.println("3. Створити FullTimeEmployee");
+        System.out.println("4. Вивести всі об'єкти");
+        System.out.println("5. Продемонструвати поліморфізм");
+        System.out.println("6. Завершити роботу");
         System.out.print("Ваш вибір: ");
     }
 
     /**
-     * Creates a new Employee from keyboard input.
+     * Creates a base Employee object from keyboard input.
      */
     private static void createEmployee() {
         try {
-            String name = readNonBlankLine("Ім'я: ");
-            Position position = readPosition();
-            double salary = readPositiveDouble("Зарплата: ");
-            int experience = readNonNegativeInt("Стаж (років): ");
-            String email = readNonBlankLine("Email: ");
-
             Employee employee = new Employee(
-                    name,
-                    position,
-                    salary,
-                    experience,
-                    email
+                    readNonBlankLine("Ім'я: "),
+                    readPosition(),
+                    readPositiveDouble("Зарплата: "),
+                    readNonNegativeInt("Стаж (років): "),
+                    readNonBlankLine("Email: ")
             );
 
             employees.add(employee);
 
-            System.out.println("Співробітника додано: " + employee);
-            System.out.println(
-                    "Всього створено Employee: "
-                            + Employee.getEmployeeCount()
-            );
+            System.out.println("Employee додано:");
+            System.out.println(employee);
 
         } catch (IllegalArgumentException e) {
             System.out.println(
-                    "Помилка: " + e.getMessage() + ". Спробуйте ще раз."
+                    "Помилка: " + e.getMessage()
             );
         }
     }
 
     /**
-     * Demonstrates copy constructor, static counter and aggregation.
+     * Creates a ContractEmployee object from keyboard input.
      */
-    private static void demonstrateFeatures() {
-        System.out.println("\n--- Демонстрація можливостей №6 ---");
+    private static void createContractEmployee() {
+        try {
+            ContractEmployee employee = new ContractEmployee(
+                    readNonBlankLine("Ім'я: "),
+                    readPosition(),
+                    readPositiveDouble("Зарплата: "),
+                    readNonNegativeInt("Стаж (років): "),
+                    readNonBlankLine("Email: "),
+                    readPositiveInt("Тривалість контракту (місяців): ")
+            );
 
+            employees.add(employee);
+
+            System.out.println("ContractEmployee додано:");
+            System.out.println(employee);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(
+                    "Помилка: " + e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Creates a FullTimeEmployee object from keyboard input.
+     */
+    private static void createFullTimeEmployee() {
+        try {
+            FullTimeEmployee employee = new FullTimeEmployee(
+                    readNonBlankLine("Ім'я: "),
+                    readPosition(),
+                    readPositiveDouble("Зарплата: "),
+                    readNonNegativeInt("Стаж (років): "),
+                    readNonBlankLine("Email: "),
+                    readNonNegativeDouble("Бонус: ")
+            );
+
+            employees.add(employee);
+
+            System.out.println("FullTimeEmployee додано:");
+            System.out.println(employee);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(
+                    "Помилка: " + e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Demonstrates polymorphism by processing different employee
+     * objects through the base Employee type.
+     */
+    private static void demonstratePolymorphism() {
         if (employees.isEmpty()) {
             System.out.println(
                     "Спочатку створіть хоча б одного співробітника."
@@ -104,33 +150,17 @@ public class Main {
             return;
         }
 
-        Employee original = employees.get(0);
+        System.out.println("\n--- Демонстрація поліморфізму ---");
 
-        Employee copy = new Employee(original);
-        employees.add(copy);
-
-        System.out.println("Оригінальний об'єкт:");
-        System.out.println(original);
-
-        System.out.println("\nКопія через copy constructor:");
-        System.out.println(copy);
-
-        System.out.println(
-                "\nКількість створених Employee: "
-                        + Employee.getEmployeeCount()
-        );
-
-        Department department = new Department("IT Department");
-        department.addEmployee(original);
-        department.addEmployee(copy);
-
-        System.out.println("\nАгрегація:");
-        System.out.println(department);
-
-        System.out.println("Співробітники відділу:");
-
-        for (Employee employee : department.getEmployees()) {
-            System.out.println(employee);
+        for (Employee employee : employees) {
+            System.out.println(
+                    "Тип: " + employee.getClass().getSimpleName()
+            );
+            System.out.println(
+                    "Об'єкт зберігається як Employee: "
+                            + employee
+            );
+            System.out.println();
         }
     }
 
@@ -146,7 +176,7 @@ public class Main {
 
         String value = scanner.nextLine();
 
-        if (value == null || value.isBlank()) {
+        if (value.isBlank()) {
             throw new IllegalArgumentException(
                     "Поле не може бути порожнім"
             );
@@ -219,7 +249,38 @@ public class Main {
 
         if (value <= 0 || !Double.isFinite(value)) {
             throw new IllegalArgumentException(
-                    "Зарплата повинна бути додатною"
+                    "Значення повинно бути додатним"
+            );
+        }
+
+        return value;
+    }
+
+    /**
+     * Reads a non-negative double value.
+     *
+     * @param prompt text displayed before input
+     * @return non-negative double
+     * @throws IllegalArgumentException if input is invalid
+     */
+    private static double readNonNegativeDouble(String prompt) {
+        System.out.print(prompt);
+
+        String input = scanner.nextLine().trim();
+
+        double value;
+
+        try {
+            value = Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                    "Некоректне числове значення: " + input
+            );
+        }
+
+        if (value < 0 || !Double.isFinite(value)) {
+            throw new IllegalArgumentException(
+                    "Значення не може бути від'ємним"
             );
         }
 
@@ -258,7 +319,38 @@ public class Main {
     }
 
     /**
-     * Prints all employees stored in the list.
+     * Reads a positive integer.
+     *
+     * @param prompt text displayed before input
+     * @return positive integer
+     * @throws IllegalArgumentException if input is invalid
+     */
+    private static int readPositiveInt(String prompt) {
+        System.out.print(prompt);
+
+        String input = scanner.nextLine().trim();
+
+        int value;
+
+        try {
+            value = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                    "Некоректне ціле значення: " + input
+            );
+        }
+
+        if (value <= 0) {
+            throw new IllegalArgumentException(
+                    "Значення повинно бути додатним"
+            );
+        }
+
+        return value;
+    }
+
+    /**
+     * Prints all employees stored in the ArrayList.
      */
     private static void printAllEmployees() {
         if (employees.isEmpty()) {
@@ -269,7 +361,11 @@ public class Main {
         System.out.println("\n--- Список співробітників ---");
 
         for (Employee employee : employees) {
+            System.out.println(
+                    "Тип: " + employee.getClass().getSimpleName()
+            );
             System.out.println(employee);
+            System.out.println();
         }
     }
 }
