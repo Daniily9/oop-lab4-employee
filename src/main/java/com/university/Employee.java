@@ -66,6 +66,11 @@ public class Employee {
         return employeeCount;
     }
 
+    /**
+     * Returns the employee's full name.
+     *
+     * @return employee's full name
+     */
     public String getName() {
         return name;
     }
@@ -83,6 +88,11 @@ public class Employee {
         this.name = name;
     }
 
+    /**
+     * Returns the employee's job position.
+     *
+     * @return employee's job position
+     */
     public Position getPosition() {
         return position;
     }
@@ -100,6 +110,11 @@ public class Employee {
         this.position = position;
     }
 
+    /**
+     * Returns the employee's salary.
+     *
+     * @return employee's salary
+     */
     public double getSalary() {
         return salary;
     }
@@ -117,6 +132,11 @@ public class Employee {
         this.salary = salary;
     }
 
+    /**
+     * Returns the employee's years of experience.
+     *
+     * @return years of experience
+     */
     public int getExperienceYears() {
         return experienceYears;
     }
@@ -136,6 +156,11 @@ public class Employee {
         this.experienceYears = experienceYears;
     }
 
+    /**
+     * Returns the employee's email address.
+     *
+     * @return employee's email address
+     */
     public String getEmail() {
         return email;
     }
