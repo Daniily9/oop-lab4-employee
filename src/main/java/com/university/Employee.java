@@ -8,8 +8,6 @@ import java.util.Objects;
  */
 public class Employee {
 
-    private static int employeeCount = 0;
-
     private String name;
     private Position position;
     private double salary;
@@ -34,7 +32,6 @@ public class Employee {
         setExperienceYears(experienceYears);
         setEmail(email);
 
-        employeeCount++;
     }
 
     /**
@@ -54,16 +51,6 @@ public class Employee {
         this.experienceYears = other.experienceYears;
         this.email = other.email;
 
-        employeeCount++;
-    }
-
-    /**
-     * Returns the total number of created Employee objects.
-     *
-     * @return number of created Employee objects
-     */
-    public static int getEmployeeCount() {
-        return employeeCount;
     }
 
     /**
