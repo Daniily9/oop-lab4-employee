@@ -11,7 +11,13 @@ class EmployeeTest {
 
     @Test
     void shouldThrowExceptionWhenInvalidValueInSetter() {
-        Employee employee = new Employee("Ivan Petrenko", "Developer", 1000.0, 3, "ivan@example.com");
+        Employee employee = new Employee(
+            "Ivan Petrenko",
+            Position.DEVELOPER,
+            1000.0,
+            3,
+            "ivan@example.com"
+        );
 
         assertThrows(IllegalArgumentException.class, () -> {
             employee.setSalary(-500.0);
@@ -21,13 +27,19 @@ class EmployeeTest {
     @Test
     void shouldThrowExceptionWhenInvalidConstructorData() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Employee("", "", 0.0, -1, "");
+            new Employee("", Position.DEVELOPER, 0.0, -1, "");
         });
     }
 
     @Test
     void shouldThrowExceptionWhenExperienceIsNegative() {
-        Employee employee = new Employee("Ivan Petrenko", "Developer", 1000.0, 3, "ivan@example.com");
+        Employee employee = new Employee(
+            "Ivan Petrenko",
+            Position.DEVELOPER,
+            1000.0,
+            3,
+            "ivan@example.com"
+        );
 
         assertThrows(IllegalArgumentException.class, () -> {
             employee.setExperienceYears(-1);
@@ -36,7 +48,13 @@ class EmployeeTest {
 
     @Test
     void shouldThrowExceptionWhenEmailIsInvalid() {
-        Employee employee = new Employee("Ivan Petrenko", "Developer", 1000.0, 3, "ivan@example.com");
+        Employee employee = new Employee(
+            "Ivan Petrenko",
+            Position.DEVELOPER,
+            1000.0,
+            3,
+            "ivan@example.com"
+        );
 
         assertThrows(IllegalArgumentException.class, () -> {
             employee.setEmail("invalid-email");
@@ -45,7 +63,13 @@ class EmployeeTest {
 
     @Test
     void shouldCreateValidEmployeeWithoutException() {
-        Employee employee = new Employee("Ivan Petrenko", "Developer", 1000.0, 3, "ivan@example.com");
+        Employee employee = new Employee(
+            "Ivan Petrenko",
+            Position.DEVELOPER,
+            1000.0,
+            3,
+            "ivan@example.com"
+        );
 
         assertEquals("Ivan Petrenko", employee.getName());
         assertEquals(1000.0, employee.getSalary());
