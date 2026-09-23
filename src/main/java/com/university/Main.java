@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Console driver for managing a list of Employee objects.
- * Provides a menu to create employees, list them, and exit.
+ * Console driver for managing Employee objects.
+ * Demonstrates enum, copy constructor, static members and aggregation.
  */
 public class Main {
 
@@ -21,6 +21,9 @@ public class Main {
     public static void main(String[] args) {
         boolean running = true;
 
+        System.out.println("Практична робота №6");
+        System.out.println("Класи, статичні члени, агрегація, enum");
+
         while (running) {
             printMenu();
             String choice = scanner.nextLine().trim();
@@ -28,12 +31,13 @@ public class Main {
             switch (choice) {
                 case "1" -> createEmployee();
                 case "2" -> printAllEmployees();
-                case "3" -> {
+                case "3" -> demonstrateFeatures();
+                case "4" -> {
                     System.out.println("Завершення роботи.");
                     running = false;
                 }
                 default -> System.out.println(
-                        "Невірний вибір. Введіть 1, 2 або 3."
+                        "Невірний вибір. Введіть 1, 2, 3 або 4."
                 );
             }
         }
@@ -48,13 +52,13 @@ public class Main {
         System.out.println("\n--- Меню ---");
         System.out.println("1. Створити новий об'єкт");
         System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Завершити роботу");
+        System.out.println("3. Продемонструвати можливості №6");
+        System.out.println("4. Завершити роботу");
         System.out.print("Ваш вибір: ");
     }
 
     /**
      * Creates a new Employee from keyboard input.
-     * Invalid input is handled without terminating the program.
      */
     private static void createEmployee() {
         try {
@@ -75,6 +79,10 @@ public class Main {
             employees.add(employee);
 
             System.out.println("Співробітника додано: " + employee);
+            System.out.println(
+                    "Всього створено Employee: "
+                            + Employee.getEmployeeCount()
+            );
 
         } catch (IllegalArgumentException e) {
             System.out.println(
@@ -84,10 +92,53 @@ public class Main {
     }
 
     /**
+     * Demonstrates copy constructor, static counter and aggregation.
+     */
+    private static void demonstrateFeatures() {
+        System.out.println("\n--- Демонстрація можливостей №6 ---");
+
+        if (employees.isEmpty()) {
+            System.out.println(
+                    "Спочатку створіть хоча б одного співробітника."
+            );
+            return;
+        }
+
+        Employee original = employees.get(0);
+
+        Employee copy = new Employee(original);
+        employees.add(copy);
+
+        System.out.println("Оригінальний об'єкт:");
+        System.out.println(original);
+
+        System.out.println("\nКопія через copy constructor:");
+        System.out.println(copy);
+
+        System.out.println(
+                "\nКількість створених Employee: "
+                        + Employee.getEmployeeCount()
+        );
+
+        Department department = new Department("IT Department");
+        department.addEmployee(original);
+        department.addEmployee(copy);
+
+        System.out.println("\nАгрегація:");
+        System.out.println(department);
+
+        System.out.println("Співробітники відділу:");
+
+        for (Employee employee : department.getEmployees()) {
+            System.out.println(employee);
+        }
+    }
+
+    /**
      * Reads a non-blank string from the keyboard.
      *
      * @param prompt text displayed before input
-     * @return entered non-blank string
+     * @return entered string
      * @throws IllegalArgumentException if input is blank
      */
     private static String readNonBlankLine(String prompt) {
@@ -145,10 +196,10 @@ public class Main {
     }
 
     /**
-     * Reads a positive double value from the keyboard.
+     * Reads a positive double value.
      *
      * @param prompt text displayed before input
-     * @return positive double value
+     * @return positive double
      * @throws IllegalArgumentException if input is invalid
      */
     private static double readPositiveDouble(String prompt) {
@@ -176,7 +227,7 @@ public class Main {
     }
 
     /**
-     * Reads a non-negative integer from the keyboard.
+     * Reads a non-negative integer.
      *
      * @param prompt text displayed before input
      * @return non-negative integer
