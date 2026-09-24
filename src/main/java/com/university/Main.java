@@ -1,15 +1,23 @@
 package com.university;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final List<Employee> employees = new ArrayList<>();
+    private static final ArrayList<Employee> employees = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
+    private static final String FILE_NAME = "input.txt";
 
     public static void main(String[] args) {
+        employees.addAll(
+                EmployeeFileManager.loadFromFile(FILE_NAME)
+        );
+
+        System.out.println(
+                "Завантажено об'єктів: " + employees.size()
+        );
+
         while (true) {
             System.out.println("\n=== ГОЛОВНЕ МЕНЮ ===");
             System.out.println("1. Створити новий об'єкт");
@@ -29,6 +37,8 @@ public class Main {
                     break;
 
                 case "3":
+                    EmployeeFileManager.saveToFile(employees, FILE_NAME);
+                    System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу завершено.");
                     return;
 
