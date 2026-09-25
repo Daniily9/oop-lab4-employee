@@ -136,56 +136,29 @@ public class Main {
 
     private static void searchByPosition() {
         Position position = readPosition();
-        ArrayList<Employee> result = new ArrayList<>();
-
-        for (Employee employee : employees) {
-            if (employee.getPosition() == position) {
-                result.add(employee);
-            }
-        }
-
-        printSearchResults(result);
+        printSearchResults(EmployeeSearcher.findByPosition(employees, position));
     }
 
     private static void searchByMinExperience() {
         int minExperience = readInt("Мінімальний стаж (років): ");
-        ArrayList<Employee> result = new ArrayList<>();
-
-        for (Employee employee : employees) {
-            if (employee.getExperienceYears() >= minExperience) {
-                result.add(employee);
-            }
-        }
-
-        printSearchResults(result);
+        printSearchResults(
+                EmployeeSearcher.findByMinExperience(employees, minExperience)
+        );
     }
 
     private static void searchBySalaryRange() {
         double minSalary = readDouble("Мінімальна зарплата: ");
         double maxSalary = readDouble("Максимальна зарплата: ");
-        ArrayList<Employee> result = new ArrayList<>();
-
-        for (Employee employee : employees) {
-            double salary = employee.getSalary();
-            if (salary >= minSalary && salary <= maxSalary) {
-                result.add(employee);
-            }
-        }
-
-        printSearchResults(result);
+        printSearchResults(
+                EmployeeSearcher.findBySalaryRange(
+                        employees, minSalary, maxSalary
+                )
+        );
     }
 
     private static void searchByName() {
-        String fragment = readString("Ім'я або його частина: ").toLowerCase();
-        ArrayList<Employee> result = new ArrayList<>();
-
-        for (Employee employee : employees) {
-            if (employee.getName().toLowerCase().contains(fragment)) {
-                result.add(employee);
-            }
-        }
-
-        printSearchResults(result);
+        String fragment = readString("Ім'я або його частина: ");
+        printSearchResults(EmployeeSearcher.findByName(employees, fragment));
     }
 
     private static void printSearchResults(ArrayList<Employee> result) {
