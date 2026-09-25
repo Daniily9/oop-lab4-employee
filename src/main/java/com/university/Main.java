@@ -20,30 +20,35 @@ public class Main {
 
         while (true) {
             System.out.println("\n=== ГОЛОВНЕ МЕНЮ ===");
-            System.out.println("1. Створити новий об'єкт");
-            System.out.println("2. Вивести інформацію про всі об'єкти");
-            System.out.println("3. Завершити роботу");
+            System.out.println("1. Пошук об'єкта");
+            System.out.println("2. Створити новий об'єкт");
+            System.out.println("3. Вивести інформацію про всі об'єкти");
+            System.out.println("4. Завершити роботу");
             System.out.print("Оберіть пункт: ");
 
             String choice = scanner.nextLine();
 
             switch (choice) {
                 case "1":
-                    createObject();
+                    searchMenu();
                     break;
 
                 case "2":
-                    printAllObjects();
+                    createObject();
                     break;
 
                 case "3":
+                    printAllObjects();
+                    break;
+
+                case "4":
                     EmployeeFileManager.saveToFile(employees, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу завершено.");
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 1 до 3.");
+                    System.out.println("Помилка: введіть число від 1 до 4.");
             }
         }
     }
@@ -93,6 +98,108 @@ public class Main {
                 default:
                     System.out.println("Помилка: введіть число від 0 до 5.");
             }
+        }
+    }
+
+    private static void searchMenu() {
+        while (true) {
+            System.out.println("\n=== ПОШУК ОБ'ЄКТА ===");
+            System.out.println("1. За посадою");
+            System.out.println("2. За мінімальним стажем");
+            System.out.println("3. За діапазоном зарплати");
+            System.out.println("4. За іменем (частина рядка)");
+            System.out.println("0. Повернутися до головного меню");
+            System.out.print("Оберіть критерій: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    searchByPosition();
+                    return;
+                case "2":
+                    searchByMinExperience();
+                    return;
+                case "3":
+                    searchBySalaryRange();
+                    return;
+                case "4":
+                    searchByName();
+                    return;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Помилка: введіть число від 0 до 4.");
+            }
+        }
+    }
+
+    private static void searchByPosition() {
+        Position position = readPosition();
+        ArrayList<Employee> result = new ArrayList<>();
+
+        for (Employee employee : employees) {
+            if (employee.getPosition() == position) {
+                result.add(employee);
+            }
+        }
+
+        printSearchResults(result);
+    }
+
+    private static void searchByMinExperience() {
+        int minExperience = readInt("Мінімальний стаж (років): ");
+        ArrayList<Employee> result = new ArrayList<>();
+
+        for (Employee employee : employees) {
+            if (employee.getExperienceYears() >= minExperience) {
+                result.add(employee);
+            }
+        }
+
+        printSearchResults(result);
+    }
+
+    private static void searchBySalaryRange() {
+        double minSalary = readDouble("Мінімальна зарплата: ");
+        double maxSalary = readDouble("Максимальна зарплата: ");
+        ArrayList<Employee> result = new ArrayList<>();
+
+        for (Employee employee : employees) {
+            double salary = employee.getSalary();
+            if (salary >= minSalary && salary <= maxSalary) {
+                result.add(employee);
+            }
+        }
+
+        printSearchResults(result);
+    }
+
+    private static void searchByName() {
+        String fragment = readString("Ім'я або його частина: ").toLowerCase();
+        ArrayList<Employee> result = new ArrayList<>();
+
+        for (Employee employee : employees) {
+            if (employee.getName().toLowerCase().contains(fragment)) {
+                result.add(employee);
+            }
+        }
+
+        printSearchResults(result);
+    }
+
+    private static void printSearchResults(ArrayList<Employee> result) {
+        System.out.println("\n=== РЕЗУЛЬТАТИ ПОШУКУ ===");
+
+        if (result.isEmpty()) {
+            System.out.println("Жоден об'єкт не відповідає умовам пошуку.");
+            return;
+        }
+
+        for (Employee employee : result) {
+            System.out.println("Тип: " + employee.getClass().getSimpleName());
+            System.out.println(employee);
+            System.out.println();
         }
     }
 
