@@ -1,21 +1,20 @@
 package com.university;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final ArrayList<Employee> employees = new ArrayList<>();
+    private static Company company;
     private static final Scanner scanner = new Scanner(System.in);
     private static final String FILE_NAME = "input.txt";
 
     public static void main(String[] args) {
-        employees.addAll(
-                EmployeeFileManager.loadFromFile(FILE_NAME)
-        );
+        company = CompanyFileManager.loadFromFile(FILE_NAME);
 
         System.out.println(
-                "Завантажено об'єктів: " + employees.size()
+            "Завантажено працівників: "
+                + company.getEmployees().size()
         );
 
         while (true) {
@@ -42,7 +41,7 @@ public class Main {
                     break;
 
                 case "4":
-                    EmployeeFileManager.saveToFile(employees, FILE_NAME);
+                    CompanyFileManager.saveToFile(company, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу завершено.");
                     return;
@@ -68,27 +67,44 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    employees.add(createEmployee());
+                    Employee employee = createEmployee();
+                    int quantity = readInt("Кількість працівників: ");
+                    company.addNewEmployee(employee, quantity);
                     System.out.println("Об'єкт Employee успішно створено.");
                     return;
 
                 case "2":
-                    employees.add(createContractEmployee());
+                    ContractEmployee contractEmployee =
+                        createContractEmployee();
+                    int contractQuantity =
+                        readInt("Кількість працівників: ");
+                    company.addNewEmployee(contractEmployee, contractQuantity);
                     System.out.println("Об'єкт ContractEmployee успішно створено.");
                     return;
 
                 case "3":
-                    employees.add(createFullTimeEmployee());
+                    FullTimeEmployee fullTimeEmployee =
+                        createFullTimeEmployee();
+                    int fullTimeQuantity =
+                        readInt("Кількість працівників: ");
+                    company.addNewEmployee(fullTimeEmployee, fullTimeQuantity);
                     System.out.println("Об'єкт FullTimeEmployee успішно створено.");
                     return;
 
                 case "4":
-                    employees.add(createPartTimeEmployee());
+                    PartTimeEmployee partTimeEmployee =
+                        createPartTimeEmployee();
+                    int partTimeQuantity =
+                        readInt("Кількість працівників: ");
+                    company.addNewEmployee(partTimeEmployee, partTimeQuantity);
                     System.out.println("Об'єкт PartTimeEmployee успішно створено.");
                     return;
 
                 case "5":
-                    employees.add(createInternEmployee());
+                    InternEmployee internEmployee = createInternEmployee();
+                    int internQuantity =
+                        readInt("Кількість працівників: ");
+                    company.addNewEmployee(internEmployee, internQuantity);
                     System.out.println("Об'єкт InternEmployee успішно створено.");
                     return;
 
@@ -136,13 +152,13 @@ public class Main {
 
     private static void searchByPosition() {
         Position position = readPosition();
-        printSearchResults(EmployeeSearcher.findByPosition(employees, position));
+        printSearchResults(company.findByPosition(position));
     }
 
     private static void searchByMinExperience() {
         int minExperience = readInt("Мінімальний стаж (років): ");
         printSearchResults(
-                EmployeeSearcher.findByMinExperience(employees, minExperience)
+                company.findByMinExperience(minExperience)
         );
     }
 
@@ -150,18 +166,16 @@ public class Main {
         double minSalary = readDouble("Мінімальна зарплата: ");
         double maxSalary = readDouble("Максимальна зарплата: ");
         printSearchResults(
-                EmployeeSearcher.findBySalaryRange(
-                        employees, minSalary, maxSalary
-                )
+                company.findBySalaryRange(minSalary, maxSalary)
         );
     }
 
     private static void searchByName() {
         String fragment = readString("Ім'я або його частина: ");
-        printSearchResults(EmployeeSearcher.findByName(employees, fragment));
+        printSearchResults(company.findByName(fragment));
     }
 
-    private static void printSearchResults(ArrayList<Employee> result) {
+    private static void printSearchResults(List<Employee> result) {
         System.out.println("\n=== РЕЗУЛЬТАТИ ПОШУКУ ===");
 
         if (result.isEmpty()) {
@@ -281,12 +295,12 @@ public class Main {
     private static void printAllObjects() {
         System.out.println("\n=== УСІ ОБ'ЄКТИ ===");
 
-        if (employees.isEmpty()) {
+        if (company.getEmployees().isEmpty()) {
             System.out.println("Колекція порожня.");
             return;
         }
 
-        for (Employee employee : employees) {
+        for (Employee employee : company.getEmployees()) {
             System.out.println("Тип: "
                     + employee.getClass().getSimpleName());
             System.out.println(employee);
