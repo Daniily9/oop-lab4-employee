@@ -1,20 +1,43 @@
 package com.university;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     private static Company company;
+    private static DatabaseManager databaseManager;
     private static final Scanner scanner = new Scanner(System.in);
     private static final String FILE_NAME = "input.txt";
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println(
+                    "Помилка: вкажіть шлях до конфігураційного файлу."
+            );
+            System.out.println(
+                    "Приклад: java Main db.properties"
+            );
+            return;
+        }
+
+        try {
+            databaseManager = new DatabaseManager(args[0]);
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println(
+                    "Помилка завантаження конфігурації: "
+                            + e.getMessage()
+            );
+            return;
+        }
+
         company = CompanyFileManager.loadFromFile(FILE_NAME);
 
         System.out.println(
-            "Завантажено працівників: "
-                + company.getEmployees().size()
+                "Завантажено працівників: "
+                        + company.getEmployees().size()
         );
 
         while (true) {
@@ -42,12 +65,16 @@ public class Main {
 
                 case "4":
                     CompanyFileManager.saveToFile(company, FILE_NAME);
-                    System.out.println("Дані збережено у файл " + FILE_NAME + ".");
+                    System.out.println(
+                            "Дані збережено у файл " + FILE_NAME + "."
+                    );
                     System.out.println("Роботу завершено.");
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 1 до 4.");
+                    System.out.println(
+                            "Помилка: введіть число від 1 до 4."
+                    );
             }
         }
     }
@@ -68,52 +95,102 @@ public class Main {
             switch (choice) {
                 case "1":
                     Employee employee = createEmployee();
-                    int quantity = readInt("Кількість працівників: ");
+                    int quantity = readInt(
+                            "Кількість працівників: "
+                    );
                     company.addNewEmployee(employee, quantity);
-                    System.out.println("Об'єкт Employee успішно створено.");
+                    saveToDatabase(employee);
+                    System.out.println(
+                            "Об'єкт Employee успішно створено."
+                    );
                     return;
 
                 case "2":
                     ContractEmployee contractEmployee =
-                        createContractEmployee();
-                    int contractQuantity =
-                        readInt("Кількість працівників: ");
-                    company.addNewEmployee(contractEmployee, contractQuantity);
-                    System.out.println("Об'єкт ContractEmployee успішно створено.");
+                            createContractEmployee();
+                    int contractQuantity = readInt(
+                            "Кількість працівників: "
+                    );
+                    company.addNewEmployee(
+                            contractEmployee,
+                            contractQuantity
+                    );
+                    saveToDatabase(contractEmployee);
+                    System.out.println(
+                            "Об'єкт ContractEmployee успішно створено."
+                    );
                     return;
 
                 case "3":
                     FullTimeEmployee fullTimeEmployee =
-                        createFullTimeEmployee();
-                    int fullTimeQuantity =
-                        readInt("Кількість працівників: ");
-                    company.addNewEmployee(fullTimeEmployee, fullTimeQuantity);
-                    System.out.println("Об'єкт FullTimeEmployee успішно створено.");
+                            createFullTimeEmployee();
+                    int fullTimeQuantity = readInt(
+                            "Кількість працівників: "
+                    );
+                    company.addNewEmployee(
+                            fullTimeEmployee,
+                            fullTimeQuantity
+                    );
+                    saveToDatabase(fullTimeEmployee);
+                    System.out.println(
+                            "Об'єкт FullTimeEmployee успішно створено."
+                    );
                     return;
 
                 case "4":
                     PartTimeEmployee partTimeEmployee =
-                        createPartTimeEmployee();
-                    int partTimeQuantity =
-                        readInt("Кількість працівників: ");
-                    company.addNewEmployee(partTimeEmployee, partTimeQuantity);
-                    System.out.println("Об'єкт PartTimeEmployee успішно створено.");
+                            createPartTimeEmployee();
+                    int partTimeQuantity = readInt(
+                            "Кількість працівників: "
+                    );
+                    company.addNewEmployee(
+                            partTimeEmployee,
+                            partTimeQuantity
+                    );
+                    saveToDatabase(partTimeEmployee);
+                    System.out.println(
+                            "Об'єкт PartTimeEmployee успішно створено."
+                    );
                     return;
 
                 case "5":
-                    InternEmployee internEmployee = createInternEmployee();
-                    int internQuantity =
-                        readInt("Кількість працівників: ");
-                    company.addNewEmployee(internEmployee, internQuantity);
-                    System.out.println("Об'єкт InternEmployee успішно створено.");
+                    InternEmployee internEmployee =
+                            createInternEmployee();
+                    int internQuantity = readInt(
+                            "Кількість працівників: "
+                    );
+                    company.addNewEmployee(
+                            internEmployee,
+                            internQuantity
+                    );
+                    saveToDatabase(internEmployee);
+                    System.out.println(
+                            "Об'єкт InternEmployee успішно створено."
+                    );
                     return;
 
                 case "0":
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 0 до 5.");
+                    System.out.println(
+                            "Помилка: введіть число від 0 до 5."
+                    );
             }
+        }
+    }
+
+    private static void saveToDatabase(Employee employee) {
+        try {
+            databaseManager.insertEmployee(employee);
+            System.out.println(
+                    "Об'єкт також збережено у базі даних."
+            );
+        } catch (SQLException e) {
+            System.out.println(
+                    "Помилка збереження у базу даних: "
+                            + e.getMessage()
+            );
         }
     }
 
@@ -145,7 +222,9 @@ public class Main {
                 case "0":
                     return;
                 default:
-                    System.out.println("Помилка: введіть число від 0 до 4.");
+                    System.out.println(
+                            "Помилка: введіть число від 0 до 4."
+                    );
             }
         }
     }
@@ -156,35 +235,55 @@ public class Main {
     }
 
     private static void searchByMinExperience() {
-        int minExperience = readInt("Мінімальний стаж (років): ");
+        int minExperience = readInt(
+                "Мінімальний стаж (років): "
+        );
         printSearchResults(
                 company.findByMinExperience(minExperience)
         );
     }
 
     private static void searchBySalaryRange() {
-        double minSalary = readDouble("Мінімальна зарплата: ");
-        double maxSalary = readDouble("Максимальна зарплата: ");
+        double minSalary = readDouble(
+                "Мінімальна зарплата: "
+        );
+        double maxSalary = readDouble(
+                "Максимальна зарплата: "
+        );
         printSearchResults(
-                company.findBySalaryRange(minSalary, maxSalary)
+                company.findBySalaryRange(
+                        minSalary,
+                        maxSalary
+                )
         );
     }
 
     private static void searchByName() {
-        String fragment = readString("Ім'я або його частина: ");
+        String fragment = readString(
+                "Ім'я або його частина: "
+        );
         printSearchResults(company.findByName(fragment));
     }
 
-    private static void printSearchResults(List<Employee> result) {
-        System.out.println("\n=== РЕЗУЛЬТАТИ ПОШУКУ ===");
+    private static void printSearchResults(
+            List<Employee> result
+    ) {
+        System.out.println(
+                "\n=== РЕЗУЛЬТАТИ ПОШУКУ ==="
+        );
 
         if (result.isEmpty()) {
-            System.out.println("Жоден об'єкт не відповідає умовам пошуку.");
+            System.out.println(
+                    "Жоден об'єкт не відповідає умовам пошуку."
+            );
             return;
         }
 
         for (Employee employee : result) {
-            System.out.println("Тип: " + employee.getClass().getSimpleName());
+            System.out.println(
+                    "Тип: "
+                            + employee.getClass().getSimpleName()
+            );
             System.out.println(employee);
             System.out.println();
         }
@@ -209,14 +308,18 @@ public class Main {
     }
 
     private static ContractEmployee createContractEmployee() {
-        System.out.println("\n--- Створення ContractEmployee ---");
+        System.out.println(
+                "\n--- Створення ContractEmployee ---"
+        );
 
         String name = readString("Ім'я: ");
         Position position = readPosition();
         double salary = readDouble("Зарплата: ");
         int experienceYears = readInt("Стаж (років): ");
         String email = readString("Email: ");
-        int contractMonths = readInt("Тривалість контракту (місяців): ");
+        int contractMonths = readInt(
+                "Тривалість контракту (місяців): "
+        );
 
         return new ContractEmployee(
                 name,
@@ -229,7 +332,9 @@ public class Main {
     }
 
     private static FullTimeEmployee createFullTimeEmployee() {
-        System.out.println("\n--- Створення FullTimeEmployee ---");
+        System.out.println(
+                "\n--- Створення FullTimeEmployee ---"
+        );
 
         String name = readString("Ім'я: ");
         Position position = readPosition();
@@ -249,14 +354,18 @@ public class Main {
     }
 
     private static PartTimeEmployee createPartTimeEmployee() {
-        System.out.println("\n--- Створення PartTimeEmployee ---");
+        System.out.println(
+                "\n--- Створення PartTimeEmployee ---"
+        );
 
         String name = readString("Ім'я: ");
         Position position = readPosition();
         double salary = readDouble("Зарплата: ");
         int experienceYears = readInt("Стаж (років): ");
         String email = readString("Email: ");
-        int weeklyHours = readInt("Робочі години на тиждень: ");
+        int weeklyHours = readInt(
+                "Робочі години на тиждень: "
+        );
 
         return new PartTimeEmployee(
                 name,
@@ -269,17 +378,21 @@ public class Main {
     }
 
     private static InternEmployee createInternEmployee() {
-        System.out.println("\n--- Створення InternEmployee ---");
+        System.out.println(
+                "\n--- Створення InternEmployee ---"
+        );
 
         String name = readString("Ім'я: ");
         Position position = readPosition();
         double salary = readDouble("Зарплата: ");
         int experienceYears = readInt("Стаж (років): ");
         String email = readString("Email: ");
-        String educationalInstitution =
-                readString("Навчальний заклад: ");
-        int internshipMonths =
-                readInt("Тривалість стажування (місяців): ");
+        String educationalInstitution = readString(
+                "Навчальний заклад: "
+        );
+        int internshipMonths = readInt(
+                "Тривалість стажування (місяців): "
+        );
 
         return new InternEmployee(
                 name,
@@ -301,8 +414,10 @@ public class Main {
         }
 
         for (Employee employee : company.getEmployees()) {
-            System.out.println("Тип: "
-                    + employee.getClass().getSimpleName());
+            System.out.println(
+                    "Тип: "
+                            + employee.getClass().getSimpleName()
+            );
             System.out.println(employee);
             System.out.println();
         }
@@ -317,7 +432,9 @@ public class Main {
                 return value;
             }
 
-            System.out.println("Помилка: поле не може бути порожнім.");
+            System.out.println(
+                    "Помилка: поле не може бути порожнім."
+            );
         }
     }
 
@@ -326,9 +443,13 @@ public class Main {
             System.out.print(message);
 
             try {
-                return Integer.parseInt(scanner.nextLine().trim());
+                return Integer.parseInt(
+                        scanner.nextLine().trim()
+                );
             } catch (NumberFormatException e) {
-                System.out.println("Помилка: введіть ціле число.");
+                System.out.println(
+                        "Помилка: введіть ціле число."
+                );
             }
         }
     }
@@ -338,9 +459,13 @@ public class Main {
             System.out.print(message);
 
             try {
-                return Double.parseDouble(scanner.nextLine().trim());
+                return Double.parseDouble(
+                        scanner.nextLine().trim()
+                );
             } catch (NumberFormatException e) {
-                System.out.println("Помилка: введіть число.");
+                System.out.println(
+                        "Помилка: введіть число."
+                );
             }
         }
     }
@@ -360,17 +485,20 @@ public class Main {
             System.out.print("Оберіть посаду: ");
 
             try {
-                int choice =
-                        Integer.parseInt(scanner.nextLine().trim());
+                int choice = Integer.parseInt(
+                        scanner.nextLine().trim()
+                );
 
                 if (choice >= 1 && choice <= positions.length) {
                     return positions[choice - 1];
                 }
             } catch (NumberFormatException ignored) {
-                // Обробка некоректного введення нижче.
+                // Некоректне введення обробляється нижче.
             }
 
-            System.out.println("Помилка: оберіть доступну посаду.");
+            System.out.println(
+                    "Помилка: оберіть доступну посаду."
+            );
         }
     }
 }

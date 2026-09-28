@@ -6,3 +6,4 @@ InternEmployee|Ivan|ANALYST|12000.0|0|ivan@example.com|Sumy State University|6
 FullTimeEmployee|Jorj|DEVELOPER|12300.0|6|Jorj@example.com|7000.0
 Employee|Test|DEVELOPER|20000.0|1|test@example.com
 ContractEmployee|Ben|TESTER|19000.0|3|ben@example.com|18
+Employee|DanDB|DEVELOPER|25000.0|2|dan.db@example.com
