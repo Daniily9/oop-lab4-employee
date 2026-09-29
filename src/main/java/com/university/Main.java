@@ -2,6 +2,7 @@ package com.university;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,7 +45,7 @@ public class Main {
                     break;
 
                 case "4":
-                    printSortedObjects();
+                    sortMenu();
                     break;
 
                 case "5":
@@ -307,13 +308,95 @@ public class Main {
         }
     }
 
-    private static void printSortedObjects() {
+    private static void sortMenu() {
+        while (true) {
+            System.out.println("\n=== ВИБІР КРИТЕРІЮ СОРТУВАННЯ ===");
+            System.out.println("1. За ім'ям");
+            System.out.println("2. За зарплатою");
+            System.out.println("3. За досвідом роботи");
+            System.out.println("0. Повернутися до головного меню");
+            System.out.print("Оберіть критерій: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    sortByName();
+                    return;
+                case "2":
+                    sortBySalary();
+                    return;
+                case "3":
+                    sortByExperience();
+                    return;
+                case "0":
+                    return;
+                default:
+                    System.out.println(
+                            "Помилка: введіть число від 0 до 3."
+                    );
+            }
+        }
+    }
+
+    private static void sortByName() {
         List<Employee> sortedEmployees =
                 new ArrayList<>(company.getEmployees());
 
-        Collections.sort(sortedEmployees);
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee first, Employee second) {
+                return first.getName().compareTo(second.getName());
+            }
+        };
 
-        System.out.println("\n=== ВІДСОРТОВАНА ІНФОРМАЦІЯ ПРО ВСІХ ПРАЦІВНИКІВ ===");
+        Collections.sort(sortedEmployees, comparator);
+
+        printSortedResults(sortedEmployees, "ім'ям");
+    }
+
+    private static void sortBySalary() {
+        List<Employee> sortedEmployees =
+                new ArrayList<>(company.getEmployees());
+
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee first, Employee second) {
+                return Double.compare(first.getSalary(), second.getSalary());
+            }
+        };
+
+        Collections.sort(sortedEmployees, comparator);
+
+        printSortedResults(sortedEmployees, "зарплатою");
+    }
+
+    private static void sortByExperience() {
+        List<Employee> sortedEmployees =
+                new ArrayList<>(company.getEmployees());
+
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee first, Employee second) {
+                return Integer.compare(
+                        first.getExperienceYears(),
+                        second.getExperienceYears()
+                );
+            }
+        };
+
+        Collections.sort(sortedEmployees, comparator);
+
+        printSortedResults(sortedEmployees, "досвідом роботи");
+    }
+
+    private static void printSortedResults(
+        List<Employee> sortedEmployees,
+        String criterion) {
+
+        System.out.println(
+                "\n=== ВІДСОРТОВАНА ІНФОРМАЦІЯ ЗА " + criterion.toUpperCase() + " ==="
+        );
 
         if (sortedEmployees.isEmpty()) {
             System.out.println("Список працівників порожній.");
