@@ -81,18 +81,8 @@ public class EmployeeFileManager {
 
         switch (type) {
             case "Employee":
-                if (parts.length != 6) {
-                    throw new IllegalArgumentException(
-                            "для Employee потрібно 6 полів"
-                    );
-                }
-
-                return new Employee(
-                        parts[1],
-                        parsePosition(parts[2]),
-                        parseDouble(parts[3], "зарплата"),
-                        parseInt(parts[4], "стаж"),
-                        parts[5]
+                throw new IllegalArgumentException(
+                        "Тип Employee є абстрактним і не може бути створений."
                 );
 
             case "ContractEmployee":

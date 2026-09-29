@@ -11,12 +11,13 @@ class EmployeeTest {
 
     @Test
     void shouldThrowExceptionWhenInvalidValueInSetter() {
-        Employee employee = new Employee(
+        FullTimeEmployee employee = new FullTimeEmployee(
             "Ivan Petrenko",
             Position.DEVELOPER,
             1000.0,
             3,
-            "ivan@example.com"
+            "ivan@example.com",
+            0.0
         );
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -27,18 +28,26 @@ class EmployeeTest {
     @Test
     void shouldThrowExceptionWhenInvalidConstructorData() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Employee("", Position.DEVELOPER, 0.0, -1, "");
+            new FullTimeEmployee(
+                "",
+                Position.DEVELOPER,
+                0.0,
+                -1,
+                "",
+                0.0
+            );
         });
     }
 
     @Test
     void shouldThrowExceptionWhenExperienceIsNegative() {
-        Employee employee = new Employee(
+        FullTimeEmployee employee = new FullTimeEmployee(
             "Ivan Petrenko",
             Position.DEVELOPER,
             1000.0,
             3,
-            "ivan@example.com"
+            "ivan@example.com",
+            0.0
         );
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -48,12 +57,13 @@ class EmployeeTest {
 
     @Test
     void shouldThrowExceptionWhenEmailIsInvalid() {
-        Employee employee = new Employee(
+        FullTimeEmployee employee = new FullTimeEmployee(
             "Ivan Petrenko",
             Position.DEVELOPER,
             1000.0,
             3,
-            "ivan@example.com"
+            "ivan@example.com",
+            0.0
         );
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -63,12 +73,13 @@ class EmployeeTest {
 
     @Test
     void shouldCreateValidEmployeeWithoutException() {
-        Employee employee = new Employee(
+        FullTimeEmployee employee = new FullTimeEmployee(
             "Ivan Petrenko",
             Position.DEVELOPER,
             1000.0,
             3,
-            "ivan@example.com"
+            "ivan@example.com",
+            0.0
         );
 
         assertEquals("Ivan Petrenko", employee.getName());

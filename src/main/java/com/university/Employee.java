@@ -6,7 +6,7 @@ import java.util.Objects;
  * Represents an employee with personal and job-related information.
  * All fields are validated on construction and on every setter call.
  */
-public class Employee {
+public abstract class Employee implements Comparable<Employee> {
 
     private String name;
     private Position position;
@@ -31,7 +31,6 @@ public class Employee {
         setSalary(salary);
         setExperienceYears(experienceYears);
         setEmail(email);
-
     }
 
     /**
@@ -50,7 +49,6 @@ public class Employee {
         this.salary = other.salary;
         this.experienceYears = other.experienceYears;
         this.email = other.email;
-
     }
 
     /**
@@ -165,6 +163,17 @@ public class Employee {
             );
         }
         this.email = email;
+    }
+
+    /**
+     * Compares employees by their names.
+     *
+     * @param other employee to compare with
+     * @return negative value, zero, or positive value depending on name order
+     */
+    @Override
+    public int compareTo(Employee other) {
+        return this.name.compareTo(other.name);
     }
 
     /**

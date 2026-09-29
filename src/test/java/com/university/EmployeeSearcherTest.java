@@ -15,12 +15,27 @@ public class EmployeeSearcherTest {
     @BeforeEach
     void setUp() {
         employees = new ArrayList<>();
-        employees.add(new Employee(
-                "Іван Петров", Position.DEVELOPER, 30000, 5, "ivan@test.com"));
-        employees.add(new Employee(
-                "Олена Коваль", Position.MANAGER, 45000, 8, "olena@test.com"));
-        employees.add(new Employee(
-                "Іван Сидоренко", Position.DEVELOPER, 25000, 2, "ivan2@test.com"));
+        employees.add(new FullTimeEmployee(
+                "Іван Петров",
+                Position.DEVELOPER,
+                30000,
+                5,
+                "ivan@test.com",
+                0.0));
+        employees.add(new FullTimeEmployee(
+                "Олена Коваль",
+                Position.MANAGER,
+                45000,
+                8,
+                "olena@test.com",
+                0.0));
+        employees.add(new FullTimeEmployee(
+                "Іван Сидоренко",
+                Position.DEVELOPER,
+                25000,
+                2,
+                "ivan2@test.com",
+                0.0));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.university;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +24,8 @@ public class Main {
             System.out.println("1. Пошук об'єкта");
             System.out.println("2. Створити новий об'єкт");
             System.out.println("3. Вивести інформацію про всі об'єкти");
-            System.out.println("4. Завершити роботу");
+            System.out.println("4. Вивести відсортовану інформацію про всіх працівників");
+            System.out.println("5. Завершити роботу");
             System.out.print("Оберіть пункт: ");
 
             String choice = scanner.nextLine();
@@ -41,13 +44,17 @@ public class Main {
                     break;
 
                 case "4":
+                    printSortedObjects();
+                    break;
+
+                case "5":
                     CompanyFileManager.saveToFile(company, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу завершено.");
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 1 до 4.");
+                    System.out.println("Помилка: введіть число від 1 до 5.");
             }
         }
     }
@@ -55,11 +62,10 @@ public class Main {
     private static void createObject() {
         while (true) {
             System.out.println("\n=== СТВОРЕННЯ ОБ'ЄКТА ===");
-            System.out.println("1. Employee");
-            System.out.println("2. ContractEmployee");
-            System.out.println("3. FullTimeEmployee");
-            System.out.println("4. PartTimeEmployee");
-            System.out.println("5. InternEmployee");
+            System.out.println("1. ContractEmployee");
+            System.out.println("2. FullTimeEmployee");
+            System.out.println("3. PartTimeEmployee");
+            System.out.println("4. InternEmployee");
             System.out.println("0. Повернутися до головного меню");
             System.out.print("Оберіть тип: ");
 
@@ -67,13 +73,6 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    Employee employee = createEmployee();
-                    int quantity = readInt("Кількість працівників: ");
-                    company.addNewEmployee(employee, quantity);
-                    System.out.println("Об'єкт Employee успішно створено.");
-                    return;
-
-                case "2":
                     ContractEmployee contractEmployee =
                         createContractEmployee();
                     int contractQuantity =
@@ -82,7 +81,7 @@ public class Main {
                     System.out.println("Об'єкт ContractEmployee успішно створено.");
                     return;
 
-                case "3":
+                case "2":
                     FullTimeEmployee fullTimeEmployee =
                         createFullTimeEmployee();
                     int fullTimeQuantity =
@@ -91,7 +90,7 @@ public class Main {
                     System.out.println("Об'єкт FullTimeEmployee успішно створено.");
                     return;
 
-                case "4":
+                case "3":
                     PartTimeEmployee partTimeEmployee =
                         createPartTimeEmployee();
                     int partTimeQuantity =
@@ -100,7 +99,7 @@ public class Main {
                     System.out.println("Об'єкт PartTimeEmployee успішно створено.");
                     return;
 
-                case "5":
+                case "4":
                     InternEmployee internEmployee = createInternEmployee();
                     int internQuantity =
                         readInt("Кількість працівників: ");
@@ -112,7 +111,7 @@ public class Main {
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 0 до 5.");
+                    System.out.println("Помилка: введіть число від 0 до 4.");
             }
         }
     }
@@ -190,23 +189,23 @@ public class Main {
         }
     }
 
-    private static Employee createEmployee() {
-        System.out.println("\n--- Створення Employee ---");
+    // private static Employee createEmployee() {
+    //     System.out.println("\n--- Створення Employee ---");
 
-        String name = readString("Ім'я: ");
-        Position position = readPosition();
-        double salary = readDouble("Зарплата: ");
-        int experienceYears = readInt("Стаж (років): ");
-        String email = readString("Email: ");
+    //     String name = readString("Ім'я: ");
+    //     Position position = readPosition();
+    //     double salary = readDouble("Зарплата: ");
+    //     int experienceYears = readInt("Стаж (років): ");
+    //     String email = readString("Email: ");
 
-        return new Employee(
-                name,
-                position,
-                salary,
-                experienceYears,
-                email
-        );
-    }
+    //     return new Employee(
+    //             name,
+    //             position,
+    //             salary,
+    //             experienceYears,
+    //             email
+    //     );
+    // }
 
     private static ContractEmployee createContractEmployee() {
         System.out.println("\n--- Створення ContractEmployee ---");
@@ -305,6 +304,26 @@ public class Main {
                     + employee.getClass().getSimpleName());
             System.out.println(employee);
             System.out.println();
+        }
+    }
+
+    private static void printSortedObjects() {
+        List<Employee> sortedEmployees =
+                new ArrayList<>(company.getEmployees());
+
+        Collections.sort(sortedEmployees);
+
+        System.out.println("\n=== ВІДСОРТОВАНА ІНФОРМАЦІЯ ПРО ВСІХ ПРАЦІВНИКІВ ===");
+
+        if (sortedEmployees.isEmpty()) {
+            System.out.println("Список працівників порожній.");
+            return;
+        }
+
+        for (Employee employee : sortedEmployees) {
+            System.out.println(
+                    employee + ", quantity=" + company.getQuantity(employee)
+            );
         }
     }
 
