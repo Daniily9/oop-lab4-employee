@@ -343,12 +343,8 @@ public class Main {
         List<Employee> sortedEmployees =
                 new ArrayList<>(company.getEmployees());
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return first.getName().compareTo(second.getName());
-            }
-        };
+        Comparator<Employee> comparator =
+                (first, second) -> first.getName().compareTo(second.getName());
 
         Collections.sort(sortedEmployees, comparator);
 
@@ -359,12 +355,11 @@ public class Main {
         List<Employee> sortedEmployees =
                 new ArrayList<>(company.getEmployees());
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return Double.compare(first.getSalary(), second.getSalary());
-            }
-        };
+        Comparator<Employee> comparator =
+                (first, second) -> Double.compare(
+                        first.getSalary(),
+                        second.getSalary()
+                );
 
         Collections.sort(sortedEmployees, comparator);
 
@@ -375,15 +370,11 @@ public class Main {
         List<Employee> sortedEmployees =
                 new ArrayList<>(company.getEmployees());
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return Integer.compare(
+        Comparator<Employee> comparator =
+                (first, second) -> Integer.compare(
                         first.getExperienceYears(),
                         second.getExperienceYears()
                 );
-            }
-        };
 
         Collections.sort(sortedEmployees, comparator);
 

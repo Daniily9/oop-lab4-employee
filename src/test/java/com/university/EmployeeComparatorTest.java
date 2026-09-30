@@ -43,12 +43,7 @@ class EmployeeComparatorTest {
                 1500
         ));
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return first.getName().compareTo(second.getName());
-            }
-        };
+        Comparator<Employee> comparator = (first, second) -> first.getName().compareTo(second.getName());
 
         Collections.sort(employees, comparator);
 
@@ -88,15 +83,7 @@ class EmployeeComparatorTest {
                 1000
         ));
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return Double.compare(
-                        first.getSalary(),
-                        second.getSalary()
-                );
-            }
-        };
+        Comparator<Employee> comparator = (first, second) -> Double.compare(first.getSalary(), second.getSalary());
 
         Collections.sort(employees, comparator);
 
@@ -136,15 +123,7 @@ class EmployeeComparatorTest {
                 1000
         ));
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return Integer.compare(
-                        first.getExperienceYears(),
-                        second.getExperienceYears()
-                );
-            }
-        };
+        Comparator<Employee> comparator = (first, second) -> Integer.compare(first.getExperienceYears(), second.getExperienceYears());
 
         Collections.sort(employees, comparator);
 
@@ -157,12 +136,7 @@ class EmployeeComparatorTest {
     void shouldHandleEmptyList() {
         List<Employee> employees = new ArrayList<>();
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return first.getName().compareTo(second.getName());
-            }
-        };
+        Comparator<Employee> comparator = (first, second) -> first.getName().compareTo(second.getName());
 
         Collections.sort(employees, comparator);
 
@@ -182,16 +156,57 @@ class EmployeeComparatorTest {
                 800
         ));
 
-        Comparator<Employee> comparator = new Comparator<Employee>() {
-            @Override
-            public int compare(Employee first, Employee second) {
-                return first.getName().compareTo(second.getName());
-            }
-        };
+        Comparator<Employee> comparator = (first, second) -> first.getName().compareTo(second.getName());
 
         Collections.sort(employees, comparator);
 
         assertEquals(1, employees.size());
         assertEquals("Alice", employees.get(0).getName());
+    }
+    @Test
+    void shouldHandleEqualValues() {
+        List<Employee> employees = new ArrayList<>();
+
+        employees.add(new FullTimeEmployee(
+                "Alice",
+                Position.TESTER,
+                25000,
+                5,
+                "alice@example.com",
+                800
+        ));
+
+        employees.add(new FullTimeEmployee(
+                "Alice",
+                Position.DEVELOPER,
+                25000,
+                5,
+                "alice2@example.com",
+                900
+        ));
+
+        Comparator<Employee> nameComparator =
+                (first, second) -> first.getName().compareTo(second.getName());
+
+        Comparator<Employee> salaryComparator =
+                (first, second) -> Double.compare(
+                        first.getSalary(),
+                        second.getSalary()
+                );
+
+        Comparator<Employee> experienceComparator =
+                (first, second) -> Integer.compare(
+                        first.getExperienceYears(),
+                        second.getExperienceYears()
+                );
+
+        Collections.sort(employees, nameComparator);
+        assertEquals(0, nameComparator.compare(employees.get(0), employees.get(1)));
+
+        Collections.sort(employees, salaryComparator);
+        assertEquals(0, salaryComparator.compare(employees.get(0), employees.get(1)));
+
+        Collections.sort(employees, experienceComparator);
+        assertEquals(0, experienceComparator.compare(employees.get(0), employees.get(1)));
     }
 }
