@@ -33,6 +33,24 @@ public class FullTimeEmployee extends Employee {
         this.bonus = bonus;
     }
 
+        /**
+     * Creates a copy of the given full-time employee.
+     * A new UUID is generated for the copied employee.
+     *
+     * @param other employee to copy
+     */
+    public FullTimeEmployee(FullTimeEmployee other) {
+        super(other);
+
+        if (other == null) {
+            throw new IllegalArgumentException(
+                    "Employee to copy must not be null"
+            );
+        }
+
+        this.bonus = other.bonus;
+    }
+
     /**
      * Returns the employee's bonus.
      *

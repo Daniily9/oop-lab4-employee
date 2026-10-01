@@ -1,18 +1,21 @@
 package com.university;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents an employee with personal and job-related information.
  * All fields are validated on construction and on every setter call.
  */
-public abstract class Employee implements Comparable<Employee> {
+public abstract class Employee
+        implements Comparable<Employee>, Identifiable {
 
     private String name;
     private Position position;
     private double salary;
     private int experienceYears;
     private String email;
+    private UUID uuid;
 
     /**
      * Creates a new Employee with validated fields.
@@ -26,6 +29,7 @@ public abstract class Employee implements Comparable<Employee> {
      */
     public Employee(String name, Position position, double salary,
                     int experienceYears, String email) {
+        this.uuid = UUID.randomUUID();
         setName(name);
         setPosition(position);
         setSalary(salary);
@@ -43,6 +47,8 @@ public abstract class Employee implements Comparable<Employee> {
         if (other == null) {
             throw new IllegalArgumentException("Employee to copy must not be null");
         }
+
+        this.uuid = UUID.randomUUID();
 
         this.name = other.name;
         this.position = other.position;
@@ -165,6 +171,11 @@ public abstract class Employee implements Comparable<Employee> {
         this.email = email;
     }
 
+
+    @Override
+    public UUID getUuid() {
+        return uuid;
+    }
     /**
      * Compares employees by their names.
      *
@@ -183,7 +194,8 @@ public abstract class Employee implements Comparable<Employee> {
      */
     @Override
     public String toString() {
-        return "Employee{name='" + name +
+        return "Employee{uuid=" + uuid +
+                ", name='" + name +
                 "', position=" + position +
                 ", salary=" + salary +
                 ", experienceYears=" + experienceYears +

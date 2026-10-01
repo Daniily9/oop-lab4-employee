@@ -1,6 +1,7 @@
 package com.university;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class EmployeeSearcher {
 
@@ -59,5 +60,17 @@ public class EmployeeSearcher {
         }
 
         return result;
+    }
+
+    public static Employee findByUuid(
+            ArrayList<Employee> employees, UUID uuid) {
+
+        for (Employee employee : employees) {
+            if (employee.getUuid().equals(uuid)) {
+                return employee;
+            }
+        }
+
+        return null;
     }
 }

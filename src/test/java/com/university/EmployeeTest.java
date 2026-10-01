@@ -122,4 +122,35 @@ class EmployeeTest {
                 employee.getEducationalInstitution());
         assertEquals(6, employee.getInternshipMonths());
     }
+
+    @Test
+    void shouldGenerateUuidForNewEmployee() {
+        FullTimeEmployee employee = new FullTimeEmployee(
+                "Ivan Petrenko",
+                Position.DEVELOPER,
+                1000.0,
+                3,
+                "ivan@example.com",
+                0.0
+        );
+
+        assertNotNull(employee.getUuid());
+    }
+
+    @Test
+    void shouldGenerateDifferentUuidForCopiedEmployee() {
+        FullTimeEmployee original = new FullTimeEmployee(
+                "Ivan Petrenko",
+                Position.DEVELOPER,
+                1000.0,
+                3,
+                "ivan@example.com",
+                0.0
+        );
+
+        FullTimeEmployee copy = new FullTimeEmployee(original);
+
+        assertNotNull(copy.getUuid());
+        assertNotEquals(original.getUuid(), copy.getUuid());
+    }
 }

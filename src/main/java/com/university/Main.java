@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
 
@@ -125,6 +126,7 @@ public class Main {
             System.out.println("3. За діапазоном зарплати");
             System.out.println("4. За іменем (частина рядка)");
             System.out.println("0. Повернутися до головного меню");
+            System.out.println("5. За UUID");
             System.out.print("Оберіть критерій: ");
 
             String choice = scanner.nextLine();
@@ -142,10 +144,13 @@ public class Main {
                 case "4":
                     searchByName();
                     return;
+                case "5":
+                    searchByUuid();
+                    return;
                 case "0":
                     return;
                 default:
-                    System.out.println("Помилка: введіть число від 0 до 4.");
+                    System.out.println("Помилка: введіть число від 0 до 5.");
             }
         }
     }
@@ -173,6 +178,36 @@ public class Main {
     private static void searchByName() {
         String fragment = readString("Ім'я або його частина: ");
         printSearchResults(company.findByName(fragment));
+    }
+
+    private static void searchByUuid() {
+        String uuidText = readString("Введіть UUID: ");
+
+        try {
+            UUID uuid = UUID.fromString(uuidText);
+            Employee employee =
+                    EmployeeSearcher.findByUuid(
+                            company.getEmployees(),
+                            uuid
+                    );
+
+            if (employee == null) {
+                System.out.println(
+                        "Працівника з таким UUID не знайдено."
+                );
+                return;
+            }
+
+            System.out.println("\n=== ЗНАЙДЕНИЙ ПРАЦІВНИК ===");
+            System.out.println("Тип: "
+                    + employee.getClass().getSimpleName());
+            System.out.println(employee);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(
+                    "Помилка: введено некоректний формат UUID."
+            );
+        }
     }
 
     private static void printSearchResults(List<Employee> result) {

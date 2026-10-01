@@ -1,5 +1,6 @@
 package com.university;
 
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -101,5 +102,34 @@ public class EmployeeSearcherTest {
         EmployeeSearcher.findByPosition(employees, Position.DEVELOPER);
 
         assertEquals(sizeBefore, employees.size());
+    }
+
+        @Test
+    void findByUuid_returnsMatchingEmployee() {
+        Employee expected = employees.get(0);
+        UUID uuid = expected.getUuid();
+
+        Employee result =
+                EmployeeSearcher.findByUuid(employees, uuid);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void findByUuid_returnsNullWhenNoMatch() {
+        UUID unknownUuid = UUID.randomUUID();
+
+        Employee result =
+                EmployeeSearcher.findByUuid(employees, unknownUuid);
+
+        assertEquals(null, result);
+    }
+
+    @Test
+    void employeesHaveDifferentUuids() {
+        UUID firstUuid = employees.get(0).getUuid();
+        UUID secondUuid = employees.get(1).getUuid();
+
+        assertTrue(!firstUuid.equals(secondUuid));
     }
 }
