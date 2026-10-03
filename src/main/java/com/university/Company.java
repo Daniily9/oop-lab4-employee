@@ -99,6 +99,84 @@ public class Company {
      * @param position employee position
      * @return list of matching employees
      */
+    /**
+     * Updates an existing employee with data from another employee.
+     * The existing employee keeps its UUID and quantity.
+     *
+     * @param existingObject employee to update
+     * @param newObject new employee data
+     * @return true if the employee was updated, false if it was not found
+     */
+public boolean update(Employee existingObject, Employee newObject) {
+    if (existingObject == null || newObject == null) {
+        return false;
+    }
+
+    int index = employees.indexOf(existingObject);
+
+    if (index == -1) {
+        return false;
+    }
+
+    Employee employee = employees.get(index);
+
+    employee.setName(newObject.getName());
+    employee.setPosition(newObject.getPosition());
+    employee.setSalary(newObject.getSalary());
+    employee.setExperienceYears(newObject.getExperienceYears());
+    employee.setEmail(newObject.getEmail());
+
+    if (employee instanceof ContractEmployee
+            && newObject instanceof ContractEmployee) {
+        ContractEmployee current = (ContractEmployee) employee;
+        ContractEmployee updated = (ContractEmployee) newObject;
+        current.setContractMonths(updated.getContractMonths());
+    } else if (employee instanceof FullTimeEmployee
+            && newObject instanceof FullTimeEmployee) {
+        FullTimeEmployee current = (FullTimeEmployee) employee;
+        FullTimeEmployee updated = (FullTimeEmployee) newObject;
+        current.setBonus(updated.getBonus());
+    } else if (employee instanceof PartTimeEmployee
+            && newObject instanceof PartTimeEmployee) {
+        PartTimeEmployee current = (PartTimeEmployee) employee;
+        PartTimeEmployee updated = (PartTimeEmployee) newObject;
+        current.setWeeklyHours(updated.getWeeklyHours());
+    } else if (employee instanceof InternEmployee
+            && newObject instanceof InternEmployee) {
+        InternEmployee current = (InternEmployee) employee;
+        InternEmployee updated = (InternEmployee) newObject;
+        current.setEducationalInstitution(
+                updated.getEducationalInstitution()
+        );
+        current.setInternshipMonths(updated.getInternshipMonths());
+    }
+
+    return true;
+}
+
+    /**
+     * Deletes an existing employee from the company.
+     * The corresponding quantity is deleted as well.
+     *
+     * @param existingObject employee to delete
+     * @return true if the employee was deleted, false if it was not found
+     */
+    public boolean delete(Employee existingObject) {
+        if (existingObject == null) {
+            return false;
+        }
+
+        int index = employees.indexOf(existingObject);
+
+        if (index == -1) {
+            return false;
+        }
+
+        employees.remove(index);
+        quantities.remove(index);
+
+        return true;
+    }
     public ArrayList<Employee> findByPosition(Position position) {
         return EmployeeSearcher.findByPosition(employees, position);
     }
@@ -169,3 +247,6 @@ public class Company {
         return result.toString();
     }
 }
+
+
+

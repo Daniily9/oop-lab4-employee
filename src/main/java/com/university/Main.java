@@ -25,9 +25,11 @@ public class Main {
             System.out.println("\n=== ГОЛОВНЕ МЕНЮ ===");
             System.out.println("1. Пошук об'єкта");
             System.out.println("2. Створити новий об'єкт");
-            System.out.println("3. Вивести інформацію про всі об'єкти");
-            System.out.println("4. Вивести відсортовану інформацію про всіх працівників");
-            System.out.println("5. Завершити роботу");
+            System.out.println("3. Модифікувати працівника");
+            System.out.println("4. Видалити працівника");
+            System.out.println("5. Вивести інформацію про всі об'єкти");
+            System.out.println("6. Вивести відсортовану інформацію про всіх працівників");
+            System.out.println("7. Завершити роботу");
             System.out.print("Оберіть пункт: ");
 
             String choice = scanner.nextLine();
@@ -42,21 +44,29 @@ public class Main {
                     break;
 
                 case "3":
-                    printAllObjects();
+                    modifyEmployee();
                     break;
 
                 case "4":
-                    sortMenu();
+                    deleteEmployee();
                     break;
 
                 case "5":
+                    printAllObjects();
+                    break;
+
+                case "6":
+                    sortMenu();
+                    break;
+
+                case "7":
                     CompanyFileManager.saveToFile(company, FILE_NAME);
                     System.out.println("Дані збережено у файл " + FILE_NAME + ".");
                     System.out.println("Роботу завершено.");
                     return;
 
                 default:
-                    System.out.println("Помилка: введіть число від 1 до 5.");
+                    System.out.println("Помилка: введіть число від 1 до 7.");
             }
         }
     }
@@ -340,6 +350,184 @@ public class Main {
                     + employee.getClass().getSimpleName());
             System.out.println(employee);
             System.out.println();
+        }
+    }
+
+    private static void modifyEmployee() {
+        List<Employee> employees = company.getEmployees();
+
+        if (employees.isEmpty()) {
+            System.out.println("Немає працівників для модифікації.");
+            return;
+        }
+
+        System.out.println("\n=== МОДИФІКАЦІЯ ПРАЦІВНИКА ===");
+        for (int i = 0; i < employees.size(); i++) {
+            Employee employee = employees.get(i);
+            System.out.println((i + 1) + ". "
+                    + employee.getClass().getSimpleName() + ": " + employee);
+        }
+
+        int employeeChoice = readInt("Оберіть номер працівника: ");
+        if (employeeChoice < 1 || employeeChoice > employees.size()) {
+            System.out.println("Помилка: працівника з таким номером немає.");
+            return;
+        }
+
+        Employee existingEmployee = employees.get(employeeChoice - 1);
+        System.out.println("1. Ім'я");
+        System.out.println("2. Посада");
+        System.out.println("3. Зарплата");
+        System.out.println("4. Стаж");
+        System.out.println("5. Email");
+
+        if (existingEmployee instanceof ContractEmployee) {
+            System.out.println("6. Тривалість контракту");
+        } else if (existingEmployee instanceof FullTimeEmployee) {
+            System.out.println("6. Бонус");
+        } else if (existingEmployee instanceof PartTimeEmployee) {
+            System.out.println("6. Робочі години на тиждень");
+        } else if (existingEmployee instanceof InternEmployee) {
+            System.out.println("6. Навчальний заклад");
+            System.out.println("7. Тривалість стажування");
+        }
+
+        int attributeChoice = readInt("Оберіть атрибут для зміни: ");
+        int maxAttribute = existingEmployee instanceof InternEmployee ? 7 : 6;
+        if (attributeChoice < 1 || attributeChoice > maxAttribute) {
+            System.out.println("Помилка: такого атрибута немає.");
+            return;
+        }
+
+        Employee updatedEmployee = copyEmployee(existingEmployee);
+
+        try {
+            switch (attributeChoice) {
+                case 1:
+                    updatedEmployee.setName(readString("Нове ім'я: "));
+                    break;
+                case 2:
+                    updatedEmployee.setPosition(readPosition());
+                    break;
+                case 3:
+                    updatedEmployee.setSalary(readDouble("Нова зарплата: "));
+                    break;
+                case 4:
+                    updatedEmployee.setExperienceYears(
+                            readInt("Новий стаж (років): "));
+                    break;
+                case 5:
+                    updatedEmployee.setEmail(readString("Новий email: "));
+                    break;
+                case 6:
+                    if (updatedEmployee instanceof ContractEmployee) {
+                        ((ContractEmployee) updatedEmployee).setContractMonths(
+                                readInt("Нова тривалість контракту (місяців): "));
+                    } else if (updatedEmployee instanceof FullTimeEmployee) {
+                        ((FullTimeEmployee) updatedEmployee).setBonus(
+                                readDouble("Новий бонус: "));
+                    } else if (updatedEmployee instanceof PartTimeEmployee) {
+                        ((PartTimeEmployee) updatedEmployee).setWeeklyHours(
+                                readInt("Нові робочі години на тиждень: "));
+                    } else if (updatedEmployee instanceof InternEmployee) {
+                        ((InternEmployee) updatedEmployee)
+                                .setEducationalInstitution(
+                                        readString("Новий навчальний заклад: "));
+                    }
+                    break;
+                case 7:
+                    ((InternEmployee) updatedEmployee).setInternshipMonths(
+                            readInt("Нова тривалість стажування (місяців): "));
+                    break;
+                default:
+                    return;
+            }
+
+            if (company.update(existingEmployee, updatedEmployee)) {
+                System.out.println("Дані працівника успішно оновлено.");
+            } else {
+                System.out.println("Працівника не знайдено; оновлення не виконано.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
+    }
+
+    private static Employee copyEmployee(Employee employee) {
+        if (employee instanceof ContractEmployee) {
+            ContractEmployee contractEmployee = (ContractEmployee) employee;
+            return new ContractEmployee(
+                    employee.getName(), employee.getPosition(),
+                    employee.getSalary(), employee.getExperienceYears(),
+                    employee.getEmail(), contractEmployee.getContractMonths());
+        }
+        if (employee instanceof FullTimeEmployee) {
+            FullTimeEmployee fullTimeEmployee = (FullTimeEmployee) employee;
+            return new FullTimeEmployee(
+                    employee.getName(), employee.getPosition(),
+                    employee.getSalary(), employee.getExperienceYears(),
+                    employee.getEmail(), fullTimeEmployee.getBonus());
+        }
+        if (employee instanceof PartTimeEmployee) {
+            PartTimeEmployee partTimeEmployee = (PartTimeEmployee) employee;
+            return new PartTimeEmployee(
+                    employee.getName(), employee.getPosition(),
+                    employee.getSalary(), employee.getExperienceYears(),
+                    employee.getEmail(), partTimeEmployee.getWeeklyHours());
+        }
+        if (employee instanceof InternEmployee) {
+            InternEmployee internEmployee = (InternEmployee) employee;
+            return new InternEmployee(
+                    employee.getName(), employee.getPosition(),
+                    employee.getSalary(), employee.getExperienceYears(),
+                    employee.getEmail(),
+                    internEmployee.getEducationalInstitution(),
+                    internEmployee.getInternshipMonths());
+        }
+
+        throw new IllegalArgumentException("Невідомий тип працівника.");
+    }
+
+    private static void deleteEmployee() {
+        List<Employee> employees = company.getEmployees();
+
+        if (employees.isEmpty()) {
+            System.out.println("Немає працівників для видалення.");
+            return;
+        }
+
+        System.out.println("\n=== ВИДАЛЕННЯ ПРАЦІВНИКА ===");
+        for (int i = 0; i < employees.size(); i++) {
+            Employee employee = employees.get(i);
+            System.out.println((i + 1) + ". "
+                    + employee.getClass().getSimpleName() + ": " + employee);
+        }
+
+        int choice = readInt("Оберіть номер працівника: ");
+        if (choice < 1 || choice > employees.size()) {
+            System.out.println("Помилка: працівника з таким номером немає.");
+            return;
+        }
+
+        Employee employee = employees.get(choice - 1);
+        System.out.println("Видалити цього працівника? (yes/no)");
+        System.out.println(employee);
+        System.out.print("Ваш вибір: ");
+
+        String confirmation = scanner.nextLine().trim();
+        if (confirmation.equalsIgnoreCase("no")) {
+            System.out.println("Видалення скасовано.");
+            return;
+        }
+        if (!confirmation.equalsIgnoreCase("yes")) {
+            System.out.println("Введіть yes або no. Видалення скасовано.");
+            return;
+        }
+
+        if (company.delete(employee)) {
+            System.out.println("Працівника успішно видалено.");
+        } else {
+            System.out.println("Працівника не знайдено; видалення не виконано.");
         }
     }
 
