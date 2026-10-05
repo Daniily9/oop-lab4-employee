@@ -448,6 +448,8 @@ public class Main {
             } else {
                 System.out.println("Працівника не знайдено; оновлення не виконано.");
             }
+        } catch (ObjectNotFoundException e) {
+            System.out.println("Помилка: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             System.out.println("Помилка: " + e.getMessage());
         }
@@ -524,10 +526,14 @@ public class Main {
             return;
         }
 
-        if (company.delete(employee)) {
-            System.out.println("Працівника успішно видалено.");
-        } else {
-            System.out.println("Працівника не знайдено; видалення не виконано.");
+        try {
+            if (company.delete(employee)) {
+                System.out.println("Працівника успішно видалено.");
+            } else {
+                System.out.println("Працівника не знайдено; видалення не виконано.");
+            }
+        } catch (ObjectNotFoundException e) {
+            System.out.println("Помилка: " + e.getMessage());
         }
     }
 

@@ -45,7 +45,7 @@ public abstract class Employee
      */
     public Employee(Employee other) {
         if (other == null) {
-            throw new IllegalArgumentException("Employee to copy must not be null");
+            throw new InvalidFieldValueException("Employee to copy must not be null");
         }
 
         this.uuid = UUID.randomUUID();
@@ -74,7 +74,7 @@ public abstract class Employee
      */
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name must not be null or blank");
+            throw new InvalidFieldValueException("Name must not be null or blank");
         }
         this.name = name;
     }
@@ -96,7 +96,7 @@ public abstract class Employee
      */
     public void setPosition(Position position) {
         if (position == null) {
-            throw new IllegalArgumentException("Position must not be null");
+            throw new InvalidFieldValueException("Position must not be null");
         }
         this.position = position;
     }
@@ -118,7 +118,7 @@ public abstract class Employee
      */
     public void setSalary(double salary) {
         if (salary <= 0 || !Double.isFinite(salary)) {
-            throw new IllegalArgumentException("Salary must be positive and finite");
+            throw new InvalidFieldValueException("Salary must be positive and finite");
         }
         this.salary = salary;
     }
@@ -140,7 +140,7 @@ public abstract class Employee
      */
     public void setExperienceYears(int experienceYears) {
         if (experienceYears < 0) {
-            throw new IllegalArgumentException(
+            throw new InvalidFieldValueException(
                     "Experience years must not be negative"
             );
         }
@@ -164,7 +164,7 @@ public abstract class Employee
      */
     public void setEmail(String email) {
         if (email == null || email.isBlank() || !email.contains("@")) {
-            throw new IllegalArgumentException(
+            throw new InvalidFieldValueException(
                     "Email must be a valid, non-blank address containing '@'"
             );
         }
@@ -242,3 +242,4 @@ public abstract class Employee
         );
     }
 }
+

@@ -115,7 +115,7 @@ public boolean update(Employee existingObject, Employee newObject) {
     int index = employees.indexOf(existingObject);
 
     if (index == -1) {
-        return false;
+        throw new ObjectNotFoundException("Employee was not found");
     }
 
     Employee employee = employees.get(index);
@@ -169,7 +169,7 @@ public boolean update(Employee existingObject, Employee newObject) {
         int index = employees.indexOf(existingObject);
 
         if (index == -1) {
-            return false;
+            throw new ObjectNotFoundException("Employee was not found");
         }
 
         employees.remove(index);
@@ -247,6 +247,4 @@ public boolean update(Employee existingObject, Employee newObject) {
         return result.toString();
     }
 }
-
-
 

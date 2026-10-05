@@ -69,7 +69,10 @@ class CompanyTest {
 
         company.addNewEmployee(existingEmployee, 1);
 
-        assertFalse(company.update(employeeToUpdate, existingEmployee));
+        assertThrows(
+                ObjectNotFoundException.class,
+                () -> company.update(employeeToUpdate, existingEmployee)
+        );
     }
 
     @Test
@@ -136,7 +139,10 @@ class CompanyTest {
 
         company.addNewEmployee(existingEmployee, 1);
 
-        assertFalse(company.delete(missingEmployee));
+        assertThrows(
+                ObjectNotFoundException.class,
+                () -> company.delete(missingEmployee)
+        );
         assertEquals(1, company.getEmployees().size());
         assertEquals(1, company.getQuantity(existingEmployee));
     }
@@ -149,3 +155,5 @@ class CompanyTest {
     }
 
 }
+
+
